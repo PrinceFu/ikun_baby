@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ikun宠物</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 200px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      overflow: hidden;
+    }
+    #pet {
+      width: 180px;
+      height: 180px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+    #stats-panel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 180px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    }
+    #stats-panel h3 {
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+    #stats-panel .stat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 12px;
+      color: #555;
+    }
+    #stats-panel .stat-item span:first-child {
+      color: #888;
+    }
+    #stats-panel .stat-item span:last-child {
+      font-weight: bold;
+      color: #e74c3c;
+    }
+    #stats-panel .close-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 50%;
+      background: #f5f5f5;
+      transition: all 0.2s;
+    }
+    #stats-panel .close-btn:hover {
+      color: #fff;
+      background: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <img id="pet" src="./images/1.png" alt="ikun">
+  <div id="stats-panel">
+    <span class="close-btn" id="close-stats">×</span>
+    <h3>🏀 运球统计</h3>
+    <div class="stat-item">
+      <span>今日</span>
+      <span id="stat-today">0</span>
+    </div>
+    <div class="stat-item">
+      <span>本周</span>
+      <span id="stat-week">0</span>
+    </div>
+    <div class="stat-item">
+      <span>本月</span>
+      <span id="stat-month">0</span>
+    </div>
+    <div class="stat-item">
+      <span>本年</span>
+      <span id="stat-year">0</span>
+    </div>
+    <div class="stat-item">
+      <span>总计</span>
+      <span id="stat-total">0</span>
+    </div>
+  </div>
+  <script src="./renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "name": "ikun-pet",
+  "version": "1.0.0",
+  "description": "桌面ikun宠物",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "clean": "node -e \"const fs=require('fs');['dist','dist-new','dist-latest'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch(e){}})\"",
+    "build:win": "npm run clean && electron-builder --win",
+    "build:mac": "npm run clean && electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.example.ikunpet",
+    "productName": "ikun宠物",
+    "directories": {
+      "output": "dist-v1.4"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/uiohook-napi/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "images",
+        "to": "images"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "uiohook-napi": "^1.5.5"
+  }
+}
