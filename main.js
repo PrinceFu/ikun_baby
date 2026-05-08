@@ -4,7 +4,14 @@ const path = require('path')
 let mainWindow
 let tray = null
 let globalDribbleEnabled = false
-let uiohook = null
+let uIOhook = null
+
+function getUiohookPath() {
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, 'app', 'node_modules', 'uiohook-napi')
+  }
+  return 'uiohook-napi'
+}
 
 function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay()
@@ -20,14 +27,22 @@ function createWindow() {
     resizable: false,
     alwaysOnTop: true,
     skipTaskbar: true,
+    paintWhenInitiallyHidden: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      backgroundThrottling: false
     }
   })
 
   mainWindow.loadFile('index.html')
+  
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.setBackgroundThrottling(false)
+    mainWindow.webContents.setFrameRate(60)
+    console.log('Background throttling disabled, frame rate set to 60')
+  })
   
   mainWindow.on('closed', function () {
     mainWindow = null
@@ -106,15 +121,18 @@ function createTray() {
 
 function registerGlobalShortcut() {
   try {
-    if (!uiohook) {
-      uiohook = require('uiohook-napi')
+    if (!uIOhook) {
+      const uiohookModule = require(getUiohookPath())
+      uIOhook = uiohookModule.uIOhook
     }
-    uiohook.on('keydown', () => {
+    
+    uIOhook.on('keydown', (e) => {
       if (mainWindow && globalDribbleEnabled) {
         mainWindow.webContents.send('keypress')
       }
     })
-    uiohook.start()
+    
+    uIOhook.start()
     console.log('Global keystroke listener started')
   } catch (e) {
     console.error('Failed to register global shortcut:', e)
@@ -123,14 +141,17 @@ function registerGlobalShortcut() {
 
 function unregisterGlobalShortcut() {
   try {
-    if (uiohook) {
-      uiohook.stop()
+    if (uIOhook) {
+      uIOhook.stop()
     }
     console.log('Global shortcut unregistered')
   } catch (e) {
     console.error('Failed to unregister global shortcut:', e)
   }
 }
+
+app.commandLine.appendSwitch('disable-background-timer-throttling')
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 app.whenReady().then(() => {
   createWindow()

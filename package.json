@@ -15,10 +15,7 @@
     "directories": {
       "output": "dist-v1.4"
     },
-    "asar": true,
-    "asarUnpack": [
-      "node_modules/uiohook-napi/**/*"
-    ],
+    "asar": false,
     "extraResources": [
       {
         "from": "images",

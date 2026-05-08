@@ -9,6 +9,9 @@ let isAnimating = false
 let statsFilePath = ''
 let globalDribbleEnabled = false
 let soundEnabled = true
+let animationFrameId = null
+let pendingAnimation = false
+let animationQueue = []
 
 const imagePath = path.join(__dirname, 'images')
 const image1 = `file://${path.join(imagePath, '1.png')}`
@@ -173,7 +176,10 @@ function hideStatsPanel() {
 }
 
 function playAnimation() {
-  if (isAnimating) return
+  if (isAnimating) {
+    pendingAnimation = true
+    return
+  }
   
   isAnimating = true
   console.log('Playing animation...')
@@ -193,6 +199,13 @@ function playAnimation() {
     isAnimating = false
     recordDribble()
     console.log('Animation completed')
+    
+    if (pendingAnimation) {
+      pendingAnimation = false
+      setTimeout(() => {
+        playAnimation()
+      }, 50)
+    }
   }, ANIMATION_DELAY * 2)
 }
 
